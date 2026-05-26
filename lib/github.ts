@@ -369,6 +369,7 @@ export async function getFullDashboardData(username: string, options: FetchOptio
   const profileData = profileResult.value;
 
   const reposData = reposResult.status === 'fulfilled' ? reposResult.value : [];
+
   if (reposResult.status === 'rejected' && process.env.NODE_ENV === 'development') {
     console.error(
       `[GitHub API] Failed to fetch repos for user "${username}" (fallback to empty list):`,

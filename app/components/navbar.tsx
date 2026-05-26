@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { Menu, X, Activity } from 'lucide-react';
+import { Menu, X, Activity, Moon, Sun } from 'lucide-react';
 import { useGlowEffect } from '@/hooks/useGlowEffect';
 
 function GithubMark() {
@@ -22,8 +22,24 @@ const NAV_LINKS = [
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
+
+  const [isDark, setIsDark] = useState(() => {
+    if (typeof window === 'undefined') return true;
+
+    return localStorage.getItem('theme') !== 'light';
+  });
+
   const { shellRef, shellVars, handleMouseEnter, handleMouseMove, handleMouseLeave } =
     useGlowEffect();
+
+  useEffect(() => {
+    document.documentElement.classList.toggle('dark', isDark);
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+  }, [isDark]);
+
+  const toggleTheme = () => {
+    setIsDark((prev) => !prev);
+  };
 
   useEffect(() => {
     const mediaQuery = window.matchMedia('(min-width: 768px)');
@@ -102,6 +118,15 @@ export default function Navbar() {
             </Link>
 
             <div className="hidden items-center gap-3 md:flex">
+              <button
+                type="button"
+                onClick={toggleTheme}
+                className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-white/15 bg-white/5 text-white transition hover:bg-white/10"
+                aria-label="Toggle theme"
+              >
+                {isDark ? <Sun size={18} /> : <Moon size={18} />}
+              </button>
+
               {NAV_LINKS.map((link) => (
                 <a
                   key={link.href}
@@ -118,7 +143,7 @@ export default function Navbar() {
 
             <button
               type="button"
-              className="inline-flex items-center justify-center rounded-xl border border-white/15 bg-white/5 p-2 text-white/90 transition hover:bg-white/10 md:hidden"
+              className="md:hidden inline-flex items-center justify-center rounded-xl border border-white/15 bg-white/5 p-2 text-white/90 transition hover:bg-white/10"
               aria-label={open ? 'Close menu' : 'Open menu'}
               aria-expanded={open}
               onClick={() => setOpen((prev) => !prev)}
