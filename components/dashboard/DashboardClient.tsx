@@ -478,6 +478,7 @@ export default function DashboardClient({ initialData, username }: DashboardClie
               exportData={{
                 stats: initialData.stats,
                 languages: initialData.languages,
+                activity: initialData.activity,
               }}
             />
             <Achievements achievements={initialData.achievements} />
@@ -540,6 +541,7 @@ export default function DashboardClient({ initialData, username }: DashboardClie
                 exportData={{
                   stats: initialData.stats,
                   languages: initialData.languages,
+                  activity: initialData.activity,
                 }}
                 badges={badgesA}
               />
@@ -562,6 +564,7 @@ export default function DashboardClient({ initialData, username }: DashboardClie
                 exportData={{
                   stats: secondUserData.stats,
                   languages: secondUserData.languages,
+                  activity: secondUserData.activity,
                 }}
                 badges={badgesB}
               />
