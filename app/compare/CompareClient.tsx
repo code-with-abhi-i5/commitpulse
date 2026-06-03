@@ -202,17 +202,66 @@ function StatBattle({
   );
 }
 
+/* ── helper: developer persona ────────────────────────────────────────── */
+
+function getDeveloperPersona(user: CompareUserData) {
+  const { stats, profile, activity } = user;
+
+  let additions = 0;
+  let deletions = 0;
+  activity.forEach((a) => {
+    additions += a.locAdditions || 0;
+    deletions += a.locDeletions || 0;
+  });
+
+  if (stats.currentStreak > 30 || stats.totalContributions > 1500) {
+    return {
+      name: 'The Machine',
+      color: 'from-purple-500 to-indigo-500',
+      shadow: 'shadow-[0_0_12px_rgba(168,85,247,0.5)]',
+    };
+  }
+  if (deletions > 0 && deletions > additions * 1.2) {
+    return {
+      name: 'The Refactorer',
+      color: 'from-rose-500 to-orange-500',
+      shadow: 'shadow-[0_0_12px_rgba(244,63,94,0.5)]',
+    };
+  }
+  if (profile.stats.stars > 100) {
+    return {
+      name: 'The Architect',
+      color: 'from-amber-400 to-orange-500',
+      shadow: 'shadow-[0_0_12px_rgba(251,191,36,0.5)]',
+    };
+  }
+  if ((stats.totalPRs || 0) > 30) {
+    return {
+      name: 'The Collaborator',
+      color: 'from-blue-500 to-cyan-500',
+      shadow: 'shadow-[0_0_12px_rgba(59,130,246,0.5)]',
+    };
+  }
+  if (stats.peakStreak > 14) {
+    return {
+      name: 'Consistent Coder',
+      color: 'from-emerald-500 to-teal-500',
+      shadow: 'shadow-[0_0_12px_rgba(16,185,129,0.5)]',
+    };
+  }
+  return {
+    name: 'Weekend Warrior',
+    color: 'from-zinc-500 to-gray-600',
+    shadow: 'shadow-[0_0_12px_rgba(113,113,122,0.5)]',
+  };
+}
+
 /* ── helper: profile card ─────────────────────────────────────────────── */
 
-function CompareProfileCard({
-  profile,
-  stats,
-  side,
-}: {
-  profile: UserProfile;
-  stats: UserStats;
-  side: 'left' | 'right';
-}) {
+function CompareProfileCard({ user, side }: { user: CompareUserData; side: 'left' | 'right' }) {
+  const { profile, stats } = user;
+  const persona = getDeveloperPersona(user);
+
   return (
     <motion.div
       initial={{ opacity: 0, x: side === 'left' ? -20 : 20 }}
@@ -234,10 +283,20 @@ function CompareProfileCard({
             />
           </div>
           {profile.isPro && (
-            <span className="absolute -bottom-1 -right-1 text-[8px] font-bold bg-black text-white dark:bg-white dark:text-black px-1.5 py-0.5 rounded-full">
+            <span className="absolute -top-2 -right-2 text-[9px] font-black bg-black text-white dark:bg-white dark:text-black px-2 py-0.5 rounded-full shadow-lg">
               PRO
             </span>
           )}
+
+          {/* Animated Persona Badge */}
+          <motion.div
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ type: 'spring', bounce: 0.5, delay: side === 'left' ? 0.3 : 0.4 }}
+            className={`absolute -bottom-3 left-1/2 -translate-x-1/2 whitespace-nowrap px-2.5 py-0.5 rounded-full text-[10px] font-bold text-white bg-gradient-to-r ${persona.color} ${persona.shadow} border border-white/20`}
+          >
+            {persona.name}
+          </motion.div>
         </div>
 
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-0.5">
@@ -999,7 +1058,7 @@ export default function CompareClient() {
 
               {/* Profile Cards */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 relative">
-                <CompareProfileCard profile={d1.profile} stats={d1.stats} side="left" />
+                <CompareProfileCard user={d1} side="left" />
 
                 {/* VS Divider */}
                 <div className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
@@ -1008,7 +1067,7 @@ export default function CompareClient() {
                   </div>
                 </div>
 
-                <CompareProfileCard profile={d2.profile} stats={d2.stats} side="right" />
+                <CompareProfileCard user={d2} side="right" />
               </div>
 
               {/* Stats Battle Grid */}
