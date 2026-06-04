@@ -42,7 +42,6 @@ import {
   Tent,
   Camera,
   Share2,
-  Twitter,
 } from 'lucide-react';
 import html2canvas from 'html2canvas';
 
@@ -1343,7 +1342,16 @@ export default function CompareClient() {
                     onClick={handleShareTwitter}
                     className="flex items-center gap-3 px-6 py-4 rounded-full bg-[#000000] dark:bg-white text-white dark:text-black hover:bg-zinc-800 dark:hover:bg-zinc-200 font-bold shadow-[0_0_30px_rgba(0,0,0,0.5)] dark:shadow-[0_0_30px_rgba(255,255,255,0.3)] transition-colors overflow-hidden relative group"
                   >
-                    <Twitter size={20} className="fill-current" />
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      className="fill-current"
+                    >
+                      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                    </svg>
                     <span className="hidden sm:inline">Share to X</span>
 
                     {/* Subtle glare effect on hover */}
