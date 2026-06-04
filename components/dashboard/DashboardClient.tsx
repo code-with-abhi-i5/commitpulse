@@ -17,6 +17,7 @@ import CommitClock from './CommitClock';
 import Heatmap from './Heatmap';
 import HistoricalTrendView from './HistoricalTrendView';
 import AIInsights from './AIInsights';
+import RoastWidget from './RoastWidget';
 import StatsCard from './StatsCard';
 import RepositoryGraph from './RepositoryGraph';
 import ComparisonStatsCard from './ComparisonStatsCard';
@@ -686,6 +687,7 @@ export default function DashboardClient({
             </div>
 
             <AIInsights insights={initialData.insights} />
+            <RoastWidget stats={initialData.stats} profile={initialData.profile} />
 
             <PopularRepos
               popularRepos={initialData.popularRepos || []}
