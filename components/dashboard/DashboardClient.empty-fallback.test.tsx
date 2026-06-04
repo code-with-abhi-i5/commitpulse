@@ -111,6 +111,10 @@ vi.mock('./GrowthTrendChart', () => ({
   default: () => <div data-testid="growth-trend-chart">Growth Trend Chart</div>,
 }));
 
+vi.mock('./RoastWidget', () => ({
+  default: () => <div data-testid="roast-widget">Roast Widget</div>,
+}));
+
 const mockPeriod = {
   kind: 'year' as const,
   label: '2026',
