@@ -42,6 +42,7 @@ import {
   Tent,
   Camera,
   Share2,
+  Twitter,
 } from 'lucide-react';
 import html2canvas from 'html2canvas';
 
@@ -932,6 +933,25 @@ export default function CompareClient() {
     }
   };
 
+  const handleShareTwitter = () => {
+    if (!data) return;
+
+    let text = '';
+    if (winner === data.user1.profile.username) {
+      text = `I just battled @${data.user2.profile.username} on CommitPulse and won! Check out my developer shape! ⚔️`;
+    } else if (winner === data.user2.profile.username) {
+      text = `I just battled @${data.user2.profile.username} on CommitPulse... they got me this time, but I'll be back! ⚔️`;
+    } else {
+      text = `I just battled @${data.user2.profile.username} on CommitPulse and it was a legendary tie! Check out our developer shapes! ⚔️`;
+    }
+
+    const url = `${BASE_URL}/compare?user1=${encodeURIComponent(data.user1.profile.username)}&user2=${encodeURIComponent(data.user2.profile.username)}`;
+    window.open(
+      `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`,
+      '_blank'
+    );
+  };
+
   const BASE_URL =
     typeof window !== 'undefined' ? window.location.origin : 'https://commitpulse.vercel.app';
 
@@ -1288,12 +1308,12 @@ export default function CompareClient() {
                   </div>
                 </div>
 
-                {/* Floating Share Button */}
+                {/* Floating Share Buttons */}
                 <motion.div
                   initial={{ opacity: 0, y: 50 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ type: 'spring', bounce: 0.5, delay: 1 }}
-                  className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50"
+                  className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 flex items-center gap-4"
                 >
                   <motion.button
                     whileHover={{ scale: 1.05 }}
@@ -1308,7 +1328,23 @@ export default function CompareClient() {
                     >
                       {isExporting ? <Loader2 size={20} /> : <Camera size={20} />}
                     </motion.div>
-                    <span>{isExporting ? 'Generating Epic Card...' : 'Export Wrapped Card'}</span>
+                    <span className="hidden sm:inline">
+                      {isExporting ? 'Generating Epic Card...' : 'Export Wrapped Card'}
+                    </span>
+                    <span className="sm:hidden">{isExporting ? 'Exporting...' : 'Export'}</span>
+
+                    {/* Subtle glare effect on hover */}
+                    <div className="absolute top-0 -inset-full h-full w-1/2 z-5 block transform -skew-x-12 bg-gradient-to-r from-transparent to-white opacity-20 group-hover:animate-shine" />
+                  </motion.button>
+
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={handleShareTwitter}
+                    className="flex items-center gap-3 px-6 py-4 rounded-full bg-[#000000] dark:bg-white text-white dark:text-black hover:bg-zinc-800 dark:hover:bg-zinc-200 font-bold shadow-[0_0_30px_rgba(0,0,0,0.5)] dark:shadow-[0_0_30px_rgba(255,255,255,0.3)] transition-colors overflow-hidden relative group"
+                  >
+                    <Twitter size={20} className="fill-current" />
+                    <span className="hidden sm:inline">Share to X</span>
 
                     {/* Subtle glare effect on hover */}
                     <div className="absolute top-0 -inset-full h-full w-1/2 z-5 block transform -skew-x-12 bg-gradient-to-r from-transparent to-white opacity-20 group-hover:animate-shine" />
