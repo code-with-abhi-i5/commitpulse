@@ -30,7 +30,7 @@ import type { DashboardPeriod } from '@/utils/dashboardPeriod';
 import { PopularRepos } from './PopularPinnnedRepos';
 
 // Define the dashboard data structure
-interface DashboardData {
+export interface DashboardData {
   profile: {
     username: string;
     name: string;
