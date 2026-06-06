@@ -1,6 +1,7 @@
 import type {
   ContributionCalendar,
   ContributionDay,
+  ContributedRepo,
   ExtendedContributionData,
   RepoContribution,
   GraphNode,
@@ -369,7 +370,7 @@ export const GITHUB_CACHE_TTL_MS = 5 * 60 * 1000;
 export const contributionsCache = new DistributedCache<ExtendedContributionData>(1000);
 const profileCache = new DistributedCache<GitHubUserProfile>(1000);
 const reposCache = new DistributedCache<GitHubRepo[]>(500);
-const contributedReposCache = new DistributedCache<Record<string, unknown>[]>(500);
+const contributedReposCache = new DistributedCache<ContributedRepo[]>(500);
 
 interface GitHubUserProfile {
   login: string;
@@ -1147,7 +1148,7 @@ export function buildCommitClock(allDays: ContributionDay[]) {
 export async function fetchContributedRepos(
   username: string,
   options: FetchOptions = {}
-): Promise<Record<string, unknown>[]> {
+): Promise<ContributedRepo[]> {
   const key = cacheKey('repos:contributed', username);
 
   const load = async () => {
@@ -1490,20 +1491,12 @@ export async function getFullDashboardData(username: string, options: FetchOptio
     });
     links.push({ source: profileData.login, target: r.name });
   });
-  contributedRepos.forEach((item) => {
-    const r = item as {
-      name: string;
-      nameWithOwner: string;
-      stargazerCount?: number;
-      forkCount?: number;
-      primaryLanguage?: { name: string } | null;
-      updatedAt?: string;
-    };
+  contributedRepos.forEach((r) => {
     nodes.push({
       id: r.nameWithOwner,
       name: r.name,
       type: 'Contribution',
-      val: Math.max(5, Math.min(20, (r.stargazerCount ?? 0) / 10 + 5)),
+      val: Math.max(5, Math.min(20, r.stargazerCount / 10 + 5)),
       color: '#22C55E',
       stats: {
         stars: r.stargazerCount,

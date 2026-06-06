@@ -93,6 +93,33 @@ export interface RepoContribution {
 }
 
 /**
+ * A repository that the user has contributed to, as returned by the
+ * `repositoriesContributedTo` GraphQL query.
+ */
+export interface ContributedRepo {
+  /** Repository name (without owner prefix). */
+  name: string;
+
+  /** Full repository identifier including owner (e.g. "owner/repo"). */
+  nameWithOwner: string;
+
+  /** Owner of the repository. */
+  owner: { login: string };
+
+  /** Number of stars on the repository. */
+  stargazerCount: number;
+
+  /** Number of forks of the repository. */
+  forkCount: number;
+
+  /** Primary programming language of the repository, if any. */
+  primaryLanguage: { name: string } | null;
+
+  /** ISO 8601 timestamp of the last update. */
+  updatedAt: string;
+}
+
+/**
  * Extended contribution data including both the calendar and repository-specific contributions.
  */
 export interface ExtendedContributionData {
