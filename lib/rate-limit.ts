@@ -146,11 +146,13 @@ export class RateLimiter {
 
     if (url && token) {
       try {
-        await fetch(`${url}/del/ratelimit_class:${ip}`, {
+        await fetch(`${url}/pipeline`, {
           method: 'POST',
           headers: {
             Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
           },
+          body: JSON.stringify([['DEL', `ratelimit_class:${ip}`]]),
         });
       } catch (error) {
         console.error('RateLimiter KV reset error:', error);
@@ -299,5 +301,13 @@ export async function rateLimit(
     limit,
     remaining: limit - newCount,
     reset: tracker.resetAt,
+  };
+}
+
+export function getRateLimitHeaders(result: RateLimitResult) {
+  return {
+    'X-RateLimit-Limit': result.limit.toString(),
+    'X-RateLimit-Remaining': result.remaining.toString(),
+    'X-RateLimit-Reset': result.reset.toString(),
   };
 }
