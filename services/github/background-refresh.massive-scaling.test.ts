@@ -16,6 +16,7 @@ describe(
       service = BackgroundRefresh.getInstance();
       service.reset();
       vi.clearAllMocks();
+      vi.spyOn(console, 'info').mockImplementation(() => {});
     });
 
     it('processes 100,000 isStale calls with diverse timestamps and measures sub-2000ms execution', () => {
